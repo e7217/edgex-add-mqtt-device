@@ -1,26 +1,27 @@
+import json
+import os
+
 import paho.mqtt.client as mqtt
-from paho.mqtt import publish
-import json, os
 from dotenv import load_dotenv
+from paho.mqtt import publish
+
 load_dotenv()
 
-host = os.getenv('HOST')
-port = os.getenv('MQTT_BROKER_PORT')
+host = os.getenv("HOST")
+port = os.getenv("MQTT_BROKER_PORT")
 
-dataset = {
-    "name": "",
-    "cmd": "",
-    "randnum": ""
-}
+dataset = {"name": "", "cmd": "", "randnum": ""}
 
 # todo: 지속적으로 랜덤 값 pub
 
 # todo: 특정 명령어를 구독하고, 특정 값 반환
 
+
 def on_connect(client, userdata, flags, rc):
-    print("Connected with result code "+str(rc))
+    print("Connected with result code " + str(rc))
     # client.subscribe("$SYS/#")
     client.subscribe("#")
+
 
 def on_message(client, userdata, msg):
     # print(msg.topic+" "+str(msg.payload))
@@ -41,6 +42,7 @@ def on_message(client, userdata, msg):
             elif data["cmd"] == "randnum":
                 data["randnum"] = 12.123
         publish.single("ResponseTopic", json.dumps(data), hostname=host, port=port)
+
 
 client = mqtt.Client()
 client.on_connect = on_connect
